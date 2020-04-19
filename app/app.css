@@ -1,0 +1,164 @@
+
+:root {
+    --main-color: #0097A7;
+    --light-color : #84FFFF;
+    --dark-color : #006064;
+    --background-color: #E0F7FA;
+    --light-text-color: white;
+    --dark-text-color: black;
+}
+
+*{
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+body {
+    /*width: 100%;*/
+    font-weight: normal;
+    font-size: 12px;
+    margin: 0 auto;
+    overflow-x: hidden;
+    height: 100%;
+}
+
+.mainContainer{
+    background-color: var(--background-color);
+    padding-left: 5px;
+    padding-right: 5px;
+    height: 100%;
+    padding-bottom: 20px;
+    /*margin-top: 10px;*/
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.mainNav{
+    background-color: var(--dark-color);
+    width: 100%;
+    display: flex;
+}
+
+.navbar-brand{
+     color: var(--light-text-color);
+}
+.navbar-brand:hover{
+    color: var(--light-color );
+}
+
+.btn-primary{
+    background-color: var(--main-color);
+    border-color: var(--main-color);
+}
+
+.btn-primary:hover, .btn-primary:after{
+    background-color: var(--dark-color);
+    border-color: var(--main-color);
+}
+
+.content-container{
+    background-color: var(--light-text-color);
+    width: min-content;
+    display: inline-flex;
+    margin: 15px;
+    padding: 15px;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    border-radius: 5px;
+
+    box-shadow:
+            0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+            0 6.7px 5.3px rgba(0, 0, 0, 0.048),
+            0 12.5px 10px rgba(0, 0, 0, 0.06),
+            0 22.3px 17.9px rgba(0, 0, 0, 0.072),
+            0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+            0 100px 80px rgba(0, 0, 0, 0.12)
+    ;
+}
+
+.addEventForm,.editEventForm{
+    width: fit-content;
+    margin: 5px;
+    height: fit-content;
+}
+
+.form-group{
+    max-width: available;
+    height: auto;
+}
+
+@media  (max-width: 576px) {
+    .form-group{
+        max-width: 100%;
+    }
+    .addEventForm{
+        width: 100%;
+        padding: 5px;
+    }
+}
+
+.list-group{
+    flex-direction: row;
+ }
+
+.list-group-item{
+    width: 20rem;
+    max-width: available;
+}
+.event-list{
+    padding: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/**Calendar*/
+.datepickerdemoCalendar {
+    /** Demo styles for mdCalendar. */
+}
+.datepickerdemoCalendar label {
+    font-size: x-small;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/******************scrollbar****************/
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: var(--dark-color);
+    border-radius: 5px;
+
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: var(--main-color);
+    border-radius: 5px;
+}
+
+

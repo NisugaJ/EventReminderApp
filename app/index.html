@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en"  >
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>My AngularJS App</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- AngularJS Material CSS -->
+  <link rel="stylesheet" href="https://gitcdn.xyz/cdn/angular/bower-material/v1.1.22-rc.0/angular-material.css" />
+<!--  <link rel="stylesheet" href="https://material.angularjs.org/1.1.22-rc.0/docs.css" />-->
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="lib/html5-boilerplate/dist/css/normalize.css">
+  <link rel="stylesheet" href="lib/html5-boilerplate/dist/css/main.css">
+
+  <script src="lib/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+  <script src="https://kit.fontawesome.com/6ed3b2d4a8.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="lib/alertifyjs/alertify.min.css" />
+  <link rel="stylesheet" href="lib/alertifyjs/default.min.css" />
+  <link rel="stylesheet" href="app.css">
+</head>
+  <body ng-app="organizerApp"  ng-controller="OrganizerController" ng-init="syncTodayEventAtStart()" >
+
+    <header class="navbar  navbar-fixed-top mainNav">
+        <a class="navbar-brand"  href="#" onclick="window.location.reload()">
+          <h2 style="font-family: 'Axure Handwriting',-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto">
+          Online Event Organizer
+          </h2>
+        </a>
+    </header>
+
+    <div class="container-fluid mainContainer">
+      <div class="row  ">
+        <div class="col-md-5 col-sm-12 content-container">
+          <div class="row">
+            <div class="col-md-6 col-sm-12">
+              <md-calendar ng-model="calendarDate" ng-change="checksForEventsForCalendarDate()"></md-calendar>
+            </div>
+            <div class="col-md-5 col-sm-12">
+              <h5> Events on {{calendarDate.toLocaleDateString()}} </h5>
+              <div ng-switch="events_on_calendar_date.length">
+                <h6 ng-switch-when="0">No Events</h6>
+              </div>
+              <ul ng-repeat="event in events_on_calendar_date" class="list-group">
+                <li class="list-group-item" >
+                  <button class="btn btn-primary" ng-click="selectItem(event.id)"  >
+                    <i class="fas fa-crosshairs"></i>
+                  </button>
+                  <button class="btn btn-primary " ng-click="removeEvent(event.id)">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                  &nbsp;&nbsp;&nbsp;{{event.title}} | {{event.startDateTime.toLocaleString()}}
+                </li >
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-12 content-container">
+          <form  class="addEventForm" >
+            <h5>Add new Event</h5>
+            <div class="form-group ">
+              <label for="InputTitle" required >Title</label>
+              <input ng-model="title"  type="text" class="form-control form-control-md" id="InputTitle" >
+            </div>
+            <div class="form-group">
+              <label for="InputDescription">Description</label>
+              <textarea ng-model="description" type="text" class="form-control form-control-md" id="InputDescription"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="InputStartDateTime">Start Date & Time</label>
+              <input ng-model="startDateTime"  type="datetime-local"  class="form-control form-control-md" id="InputStartDateTime">
+            </div>
+            <button ng-click="addEvent()" type="submit" class="btn btn-primary btn-block">Save</button>
+          </form>
+        </div>
+        <div class="col-md-3 col-sm-12 content-container">
+          <div class="row justify-content-md-around">
+            <div class="col-md-7">
+              <h5>Today ({{today.toLocaleDateString()}})</h5>
+            </div>
+            <div class="col-md-7 col-sm-12 event-list"  >
+              <div ng-repeat="event in events_today" class="list-group">
+                <a ng-click="selectItem(event.id)" class="list-group-item list-group-item-action" >
+                  <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{event.title}}</h5>
+                    <small>{{event.startDateTime.toLocaleTimeString()}}</small>
+                  </div>
+                  <p class="mb-1 "style="max-width: 20rem;">{{event.description}}</p>
+                  <small> {{event.remainingTime}} </small>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-md-around">
+        <div class="col-md-4 col-sm-12 content-container">
+          <div class="row">
+            <div class="col-12 col-sm-12">
+              <h5> All Events </h5>
+            </div>
+            <div class="col-12 col-sm-12 event-list"   >
+              <ul ng-repeat="event in events" class="list-group">
+                  <li class="list-group-item" >
+
+                  <button class="btn btn-primary" ng-click="selectItem(event.id)"  >
+                    <i class="fas fa-crosshairs"></i>
+                  </button>
+                  <button class="btn btn-primary " ng-click="removeEvent(event.id)">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                  &nbsp;&nbsp;&nbsp;{{event.title}} | {{event.startDateTime.toLocaleString()}} | {{event.remainingTime}}
+                </li >
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-12 content-container" >
+          <div class="card" style="width: 20rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{updatingEvent.title || '***********'}}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">{{selectedEvent.startDateTime.toLocaleString() || '*****'}}</h6>
+              <p class="card-text">{{updatingEvent.description || '*****'}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-12 content-container">
+          <form  class="editEventForm" >
+            <h5>Update Event : {{updatingEvent.title}}</h5>
+            <div class="form-group ">
+              <label for="EditTitle" required >Title</label>
+              <input ng-model="updatingEvent.title"  type="text" class="form-control form-control-md" id="EditTitle" >
+            </div>
+            <div class="form-group">
+              <label for="EditDescription">Description</label>
+              <textarea ng-model="updatingEvent.description"  type="text" class="form-control form-control-md" id="EditDescription"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="EditStartDateTime">Start Date & Time</label>
+              <input ng-model="updatingEvent.startDateTime"  type="datetime-local"  class="form-control form-control-md" id="EditStartDateTime">
+            </div>
+            <button ng-click="updateEvent()" type="submit" class="btn btn-primary btn-block">Update</button>
+          </form>
+        </div>
+      </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+      <!-- Optional JavaScript -->
+      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+      <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+      <script src="lib/alertifyjs/alertify.min.js"></script>
+      <script src="lib/autosize/autosize.min.js"></script>
+      <script>
+        $('textarea').each(function(){
+          autosize(this);
+        }).on('autosize:resized', function(){
+          console.log('textarea height updated');
+        });
+      </script>
+    <!-- In production use:
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
+    -->
+      <script src="lib/angular/angular.js"></script>
+
+      <!-- Material UI -->
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-animate.min.js"></script>
+      <script src="lib/angular-route/angular-route.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-aria.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-messages.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.js"></script>
+      <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/t-114/svg-assets-cache.js"></script>
+      <script src="https://gitcdn.xyz/cdn/angular/bower-material/v1.1.22-rc.0/angular-material.js"></script>
+
+      <script src="app.js"></script>
+      <script src="controllers/OrganizerController.js"></script>
+
+      <script src="core/version/version.js"></script>
+      <script src="core/version/version-directive.js"></script>
+      <script src="core/version/interpolate-filter.js"></script>
+      <script src="lib/soundmanager2/script/soundmanager2-jsmin.js"></script>
+      <script>
+        soundManager.setup({
+          url: 'lib/soundmanager2/swf/',
+          onready: function() {
+            alertify.message("Audio Setup OK")
+            // mySound.play({ loops: 3});
+          },
+          ontimeout: function() {
+            alertify.message("Audio Ended")
+          }
+        });
+      </script>
+  </body>
+</html>
