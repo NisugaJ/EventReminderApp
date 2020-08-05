@@ -7,7 +7,7 @@
   "license": "MIT",
   "dependencies": {
     "alertifyjs": "^1.13.1",
-    "angular": "^1.7.9",
+    "angular": "^1.8.0",
     "angular-loader": "^1.7.5",
     "angular-route": "^1.7.9",
     "autosize": "^4.0.2",
